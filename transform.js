@@ -1,4 +1,5 @@
 module.exports.to_max = (table) => {
+    // transpose the input values 
     let new_table = [];
     for(i = 0; i <= table[0].length - 1; i++){
         let temp = [];

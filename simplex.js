@@ -42,11 +42,16 @@ calculate = (data) => {
     for (var i = 0; bool === true; i++){
         let pivot_c = get_pivot_column_index(data[data.length - 1])
         let pivot_r = get_pivot_row_index(data, pivot_c)
+        // save the number of columns
         let columns = data[0].length
+        // get the pivot element with the coords from above
         let pivot_e = data[pivot_r][pivot_c]
+
+        // divide the pivot row
         for(var i = 0; i < columns; i++){
             data[pivot_r][i] = (data[pivot_r][i] / pivot_e)
         }
+        // process the rest -> get the factor for row[j] and divide each value in each row 
         for(var j = 0; j < data.length; j++){
             if(j !== pivot_r){
                 let factor = data[j][pivot_c] * 1
@@ -55,6 +60,7 @@ calculate = (data) => {
                 }
             }
         }
+        //check if every value in the objective function row is smaller then 0
         if(!Math.max(...data[data.length - 1]) > 0){
             bool = false
             break
@@ -65,14 +71,26 @@ calculate = (data) => {
 }
 
 module.exports.process_input = async (file) => {
+    //start timer
     console.time(`${file.split('.')[0]} processed in`)
+
+    // parse the requested file
     let table = await parser.parse_input_file(file)
+
+    //transpose the table
     let transposed_table = transform.to_max(table)
+
+    // save the amomunt of variables before adding slack variables 
     const colums_before_transposition = transposed_table[0].length - 1
+    
+    //add slack variables to transposed table
     for(line in transposed_table){
         transposed_table[line] = get_slack_values(line, transposed_table.length, transposed_table[line])
     }
+    
+    // run the calculation
     let result = calculate(transposed_table)
+    //stop timer
     console.timeEnd(`${file.split('.')[0]} processed in`)
     
     output.analyse_result(result, colums_before_transposition)

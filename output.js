@@ -1,5 +1,5 @@
 module.exports.analyse_result = (data, variables) => {
-    
+    // get the finaly values for each variable and write a table to stdout
     let result_analysed = {}
     
     function keys (result) {

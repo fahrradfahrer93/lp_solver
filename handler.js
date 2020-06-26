@@ -12,11 +12,13 @@ prompt_table_of_files = () => {
     })
     
     var string;
+    // read directory and create string of variables
     fs.readdir(input_files, async (err, files) => {
         files.forEach(file => {
             if(string === undefined) string = file.split('.')[0] + '\n'
             else string += ' ' + file.split('.')[0] + '\n'
         })
+        // write string to stdout and run the main programm with the given file name
         rl.question(`Choose set to run: \n ${string}`, (answer, callback) => {
             string = answer + '.txt'
             rl.close()
